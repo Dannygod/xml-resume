@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <title>教育背景 - xml resume</title>
+    </head>
+<body>
+    <div class="theme-switch-wrapper">
+        <span>☀️</span>
+        <label class="theme-switch" for="theme-toggle">
+            <input type="checkbox" id="theme-toggle" />
+            <span class="slider"></span>
+        </label>
+        <span>🌙</span>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">關於我</a></li>
+            <li><a href="education.html">教育背景</a></li>
+            <li><a href="skills.html">專業技能</a></li>
+            <li><a href="internship.html">實習經驗</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h3>教育背景</h3>
+        <br/>
+        <table id="education"></table>
+    </main>
+    <footer>
+        <p>Copyright 2025 Hsu Chen-Yen</p>
+    </footer>
+    <script>
+        const xhttp = new XMLHttpRequest();
+        const educationTable = document.getElementById("education");
+        xhttp.onload = function() {
+            const xmlDoc = xhttp.responseXML;
+            const edu = xmlDoc.getElementsByTagName("教育背景");
+            renderEducation(edu);
+        }
+        xhttp.open("GET", "resume.xml");
+        xhttp.send();
+
+        function renderEducation(edu) {
+            let table = "<tr><th>學校</th><th>系所</th><th>年級</th></tr>";
+            for (let i = 0; i < edu.length; i++) {
+                const schoolEl = edu[i].getElementsByTagName("學校")[0];
+                const deptEl = edu[i].getElementsByTagName("系所")[0];
+                const gradeEl = edu[i].getElementsByTagName("年級")[0];
+
+                const school = schoolEl.getAttribute("school");
+                const englishSchool = schoolEl.getAttribute("englishSchool");
+                const department = deptEl.getAttribute("department");
+                const englishDepartment = deptEl.getAttribute("englishDepartment");
+                const grade = gradeEl.getAttribute("grade");
+
+                table += "<tr><td>" +
+                    school + " (" + englishSchool + ")" +
+                    "</td><td>" +
+                    department + " (" + englishDepartment + ")" +
+                    "</td><td>" +
+                    grade +
+                    "</td></tr>";
+            }
+            educationTable.innerHTML = table;
+        }
+
+        // Light / Dark Mode
+        const themeToggle = document.getElementById("theme-toggle");
+        const htmlElement = document.documentElement;
+
+        function setTheme(theme) {
+            htmlElement.setAttribute("data-theme", theme);
+            localStorage.setItem("theme", theme);
+            if (themeToggle) {
+                themeToggle.checked = theme === "dark";
+            }
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener("change", () => {
+                const currentTheme = htmlElement.getAttribute("data-theme") || "light";
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+                setTheme(newTheme);
+            });
+
+            const savedTheme = localStorage.getItem("theme");
+            const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (prefersDark) {
+                setTheme("dark");
+            } else {
+                setTheme("light");
+            }
+        }
+    </script>
+</body>
+</html>
+
+

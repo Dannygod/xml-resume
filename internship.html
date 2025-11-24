@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <title>實習經驗 - xml resume</title>
+    </head>
+<body>
+    <div class="theme-switch-wrapper">
+        <span>☀️</span>
+        <label class="theme-switch" for="theme-toggle">
+            <input type="checkbox" id="theme-toggle" />
+            <span class="slider"></span>
+        </label>
+        <span>🌙</span>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">關於我</a></li>
+            <li><a href="education.html">教育背景</a></li>
+            <li><a href="skills.html">專業技能</a></li>
+            <li><a href="internship.html">實習經驗</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h3>實習經驗</h3>
+        <br/>
+        <table id="internship"></table>
+    </main>
+    <footer>
+        <p>Copyright 2025 Hsu Chen-Yen</p>
+    </footer>
+    <script>
+        const xhttp = new XMLHttpRequest();
+        const internshipTable = document.getElementById("internship");
+        xhttp.onload = function() {
+            const xmlDoc = xhttp.responseXML;
+            const intern = xmlDoc.getElementsByTagName("實習經驗");
+            renderInternship(intern);
+        }
+        xhttp.open("GET", "resume.xml");
+        xhttp.send();
+
+        function renderInternship(intern) {
+            let table = "<tr><th>公司</th><th>職稱</th><th>英文職稱</th><th>期間</th></tr>";
+            for (let i = 0; i < intern.length; i++) {
+                const companyEl = intern[i].getElementsByTagName("公司")[0];
+                const periodEl = intern[i].getElementsByTagName("期間")[0];
+
+                const company = companyEl.getAttribute("company");
+                const position = companyEl.getAttribute("position");
+                const englishPosition = companyEl.getAttribute("englishPosition");
+                const period = periodEl.getAttribute("period");
+
+                table += "<tr><td>" +
+                    company +
+                    "</td><td>" +
+                    position +
+                    "</td><td>" +
+                    englishPosition +
+                    "</td><td>" +
+                    period +
+                    "</td></tr>";
+            }
+            internshipTable.innerHTML = table;
+        }
+
+        // Light / Dark Mode
+        const themeToggle = document.getElementById("theme-toggle");
+        const htmlElement = document.documentElement;
+
+        function setTheme(theme) {
+            htmlElement.setAttribute("data-theme", theme);
+            localStorage.setItem("theme", theme);
+            if (themeToggle) {
+                themeToggle.checked = theme === "dark";
+            }
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener("change", () => {
+                const currentTheme = htmlElement.getAttribute("data-theme") || "light";
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+                setTheme(newTheme);
+            });
+
+            const savedTheme = localStorage.getItem("theme");
+            const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (prefersDark) {
+                setTheme("dark");
+            } else {
+                setTheme("light");
+            }
+        }
+    </script>
+</body>
+</html>
+
+

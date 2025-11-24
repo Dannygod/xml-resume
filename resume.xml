@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<名片 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <個人資訊 type="PersonalInfo">
+        <中文姓名 chineseName="許宸研"/>
+        <英文姓名 englishName="HSU CHEN-YEN"/>
+        <學號 studentID="41147020S"/>
+    </個人資訊>
+    <教育背景 type="Education">
+        <學校 school="國立臺灣師範大學" englishSchool="National Taiwan Normal University"/>
+        <系所 department="資訊工程學系" englishDepartment="Department of Computer Science and Information Engineering"/>
+        <年級 grade="4"/>
+    </教育背景>
+    <專業技能 type="Skills">
+        <程式語言 programmingLanguages="TypeScript, C/C++, Python"/>
+        <前端框架 frontendFrameworks="Angular, React, Next.js"/>
+        <UI框架 uiFrameworks="Ant Design, Shadcn-ui, TailwindCSS"/>
+        <資料庫 databases="MySQL, MongoDB"/>
+        <AI工具 aiTools="Cursor, Claude Code CLI"/>
+    </專業技能>
+    <實習經驗 type="Internship">
+        <公司 company="VIA Technologies" position="前端工程師實習" englishPosition="Frontend Engineer Intern"/>
+        <期間 period="2025/06-NOW"/>
+    </實習經驗>
+    <聯絡方式 type="Contact">
+        <電子郵件 email="411147020s@gapps.ntnu.edu.tw"/>
+    </聯絡方式>
+</名片>

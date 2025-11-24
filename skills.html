@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <title>專業技能 - xml resume</title>
+    </head>
+<body>
+    <div class="theme-switch-wrapper">
+        <span>☀️</span>
+        <label class="theme-switch" for="theme-toggle">
+            <input type="checkbox" id="theme-toggle" />
+            <span class="slider"></span>
+        </label>
+        <span>🌙</span>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">關於我</a></li>
+            <li><a href="education.html">教育背景</a></li>
+            <li><a href="skills.html">專業技能</a></li>
+            <li><a href="internship.html">實習經驗</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h3>專業技能</h3>
+        <br/>
+        <table id="skills"></table>
+    </main>
+    <footer>
+        <p>Copyright 2025 Hsu Chen-Yen</p>
+    </footer>
+    <script>
+        const xhttp = new XMLHttpRequest();
+        const skillsTable = document.getElementById("skills");
+        xhttp.onload = function() {
+            const xmlDoc = xhttp.responseXML;
+            const skills = xmlDoc.getElementsByTagName("專業技能");
+            renderSkills(skills);
+        }
+        xhttp.open("GET", "resume.xml");
+        xhttp.send();
+
+        function renderSkills(skills) {
+            let table = "<tr><th>技能類別</th><th>內容</th></tr>";
+            for (let i = 0; i < skills.length; i++) {
+                const langEl = skills[i].getElementsByTagName("程式語言")[0];
+                const feEl = skills[i].getElementsByTagName("前端框架")[0];
+                const uiEl = skills[i].getElementsByTagName("UI框架")[0];
+                const dbEl = skills[i].getElementsByTagName("資料庫")[0];
+                const aiEl = skills[i].getElementsByTagName("AI工具")[0];
+
+                table += "<tr><td>程式語言</td><td>" +
+                    langEl.getAttribute("programmingLanguages") +
+                    "</td></tr>";
+
+                table += "<tr><td>前端框架</td><td>" +
+                    feEl.getAttribute("frontendFrameworks") +
+                    "</td></tr>";
+
+                table += "<tr><td>UI 框架</td><td>" +
+                    uiEl.getAttribute("uiFrameworks") +
+                    "</td></tr>";
+
+                table += "<tr><td>資料庫</td><td>" +
+                    dbEl.getAttribute("databases") +
+                    "</td></tr>";
+
+                table += "<tr><td>AI 工具</td><td>" +
+                    aiEl.getAttribute("aiTools") +
+                    "</td></tr>";
+            }
+            skillsTable.innerHTML = table;
+        }
+
+        // Light / Dark Mode
+        const themeToggle = document.getElementById("theme-toggle");
+        const htmlElement = document.documentElement;
+
+        function setTheme(theme) {
+            htmlElement.setAttribute("data-theme", theme);
+            localStorage.setItem("theme", theme);
+            if (themeToggle) {
+                themeToggle.checked = theme === "dark";
+            }
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener("change", () => {
+                const currentTheme = htmlElement.getAttribute("data-theme") || "light";
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+                setTheme(newTheme);
+            });
+
+            const savedTheme = localStorage.getItem("theme");
+            const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (prefersDark) {
+                setTheme("dark");
+            } else {
+                setTheme("light");
+            }
+        }
+    </script>
+</body>
+</html>
+
+

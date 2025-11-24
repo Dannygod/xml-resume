@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <title>xml resume</title>
+    </head>
+<body>
+    <div class="theme-switch-wrapper">
+        <span>☀️</span>
+        <label class="theme-switch" for="theme-toggle">
+            <input type="checkbox" id="theme-toggle" />
+            <span class="slider"></span>
+        </label>
+        <span>🌙</span>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="index.html">關於我</a></li>
+            <li><a href="education.html">教育背景</a></li>
+            <li><a href="skills.html">專業技能</a></li>
+            <li><a href="internship.html">實習經驗</a></li>
+        </ul>
+    </nav>
+    <main>
+        <h3>xml resume</h3>
+        <br/>
+        <table id="resume"></table>
+        <img src="assets/profile.jpg" alt="profile">
+        <h3>作品集</h3>
+        <div class="project-container">
+            <a href="">
+                <div class="project-card">
+                    <h4>作品名稱</h4>
+                    <p>作品描述</p>
+                </div>
+            </a>
+            <a href=""><div class="project-card">
+                <h4>作品名稱</h4>
+                <p>作品描述</p>
+            </div></a>
+            <a href=""><div class="project-card">
+                <h4>作品名稱</h4>
+                <p>作品描述</p>
+            </div></a>
+        </div>
+    </main>
+    <footer>
+        <p>Copyright 2025 Hsu Chen-Yen</p>
+    </footer>
+    <script>
+        const xhttp = new XMLHttpRequest();
+        const resume = document.getElementById("resume");
+        xhttp.onload = function() {
+            const xmlDoc = xhttp.responseXML;
+            const cd = xmlDoc.getElementsByTagName("個人資訊");
+            renderResume(cd);
+        }
+        xhttp.open("GET", "resume.xml");
+        xhttp.send();
+        function renderResume(cd) {
+            let table = "<tr><th>中文姓名</th><th>英文姓名</th><th>學號</th></tr>";
+            for (let i = 0; i < cd.length; i++) {
+                const chineseName = cd[i].getElementsByTagName("中文姓名")[0].getAttribute("chineseName");
+                const englishName = cd[i].getElementsByTagName("英文姓名")[0].getAttribute("englishName");
+                const studentID = cd[i].getElementsByTagName("學號")[0].getAttribute("studentID");
+
+                table += "<tr><td>" +
+                    chineseName +
+                    "</td><td>" +
+                    englishName +
+                    "</td><td>" +
+                    studentID +
+                    "</td></tr>";
+            }
+            resume.innerHTML = table;
+        }
+
+        // Light / Dark Mode
+        const themeToggle = document.getElementById("theme-toggle");
+        const htmlElement = document.documentElement;
+
+        function setTheme(theme) {
+            htmlElement.setAttribute("data-theme", theme);
+            localStorage.setItem("theme", theme);
+            if (themeToggle) {
+                themeToggle.checked = theme === "dark";
+            }
+        }
+
+        if (themeToggle) {
+            themeToggle.addEventListener("change", () => {
+                const currentTheme = htmlElement.getAttribute("data-theme") || "light";
+                const newTheme = currentTheme === "dark" ? "light" : "dark";
+                setTheme(newTheme);
+            });
+
+            const savedTheme = localStorage.getItem("theme");
+            const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+            if (savedTheme) {
+                setTheme(savedTheme);
+            } else if (prefersDark) {
+                setTheme("dark");
+            } else {
+                setTheme("light");
+            }
+        }
+    </script>
+</body>
+</html>
