@@ -1,0 +1,55 @@
+name: Build and Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # 安裝 node（用來跑 sass）
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 安裝 sass（全域即可，不需要 package.json）
+      - name: Install Sass
+        run: npm install -g sass
+
+      # 編譯 style/style.scss → style/style.css
+      - name: Build SCSS
+        run: sass style/style.scss style/style.css --no-source-map
+
+      # GitHub Pages 設定
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # 打包全部檔案
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      # 部署
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
